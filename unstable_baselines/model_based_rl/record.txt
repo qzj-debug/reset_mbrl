@@ -23,7 +23,7 @@ agent reset同样在networks.py里定义
 尝试了整体reset和部分层reset，结果都不好，可以试试动态调整步长（因为mb算法对参数很敏感，就是有很多参数需要调）
 反正这个idea是一定要写文章的。以及什么时候应该停止对模型的训练？save的时候是否需要save optimizer？
 
-
+测试一下
 
 想法：
 调整model的utd，应该观察到utd很大的时候算法性能下降（因为过拟合初始数据）然而发现model的utd是1

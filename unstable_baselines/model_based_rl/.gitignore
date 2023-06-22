@@ -120,7 +120,6 @@ pushonline
 run_case/
 
 data/*
-result/*
 output/*
 **/data/*
 */data/*
