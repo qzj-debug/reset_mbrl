@@ -1,0 +1,42 @@
+mbpo代码结构
+cd model_based_rl/mbpo
+
+default参数：configs/default.py
+模型定义在transition_model.py里
+train的过程在trainer中（调用agent的方法）
+记录实验结果的代码在common/trainer中 40行， poststep()
+agent在agent.py里定义
+
+
+
+model reset 主要更改代码：
+
+transition_model.py（reset_model）->models.py(reset_parameter)->networks.py(reset_net), 定义reset操作是在networks.py里
+networks.py 188行 mlpnetworks
+
+agent reset同样在networks.py里定义
+
+
+
+
+进展：
+尝试了整体reset和部分层reset，结果都不好，可以试试动态调整步长（因为mb算法对参数很敏感，就是有很多参数需要调）
+反正这个idea是一定要写文章的。以及什么时候应该停止对模型的训练？save的时候是否需要save optimizer？
+
+
+
+想法：
+调整model的utd，应该观察到utd很大的时候算法性能下降（因为过拟合初始数据）然而发现model的utd是1
+验证model训练如果先使用比较好的agent收集的数据，则会带来算法最终性能的提升（首先，使用model-based方法训练一个sac，并使用这个agent收集数据或者保留replay_buffer用作初始化）
+
+
+
+问题：
+如何评价一个model学的是否更好？
+使用一个预训练的sac agent (保留actor, critic, replay_buffer)，看指标，评价模型好坏
+
+仅仅reset agent 怎么样？
+尝试一下reset sac agent的效果 命名为reset_sac_...
+
+
+
