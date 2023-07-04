@@ -42,12 +42,12 @@ def parse_reset_layers(ctx, param, value):
 @click.option("--return_save_path", type=str, default = '/home/data/qzj/data/unstable_baselines/unstable_baselines/model_based_rl/results/mbpo/HalfCheetah/half300.txt' )#return保存的路径,要具体到文件名
 @click.option("--reset_layers", type=str, default= '2,4,6,8', callback=parse_reset_layers) #设置reset的layers,解析为列表
 
-@click.option("--reset_sac_frequency", type=int, default=20000) # reset agent的频率，默认不reset参数, 设置为2*10^4,所有网络都重置
-
-
+@click.option("--reset_sac_frequency", type=int, default=0) # reset agent的频率，默认不reset参数, 设置为2*10^4,所有网络都重置
+@click.option("--model_utd", type=int, default=1) # model更新的utd，默认是1
+@click.option("--agent_utd", type=int, default=0) # agent更新的utd,默认按配置
 @click.argument('args', nargs=-1)
 
-def main(config_path, log_dir, gpu, print_log, enable_pbar, seed, info, load_path, reset_frequency, save_frequency, model_save_path, return_save_path, reset_layers, reset_sac_frequency, args):
+def main(config_path, log_dir, gpu, print_log, enable_pbar, seed, info, load_path, reset_frequency, save_frequency, model_save_path, return_save_path, reset_layers, reset_sac_frequency, model_utd, agent_utd, args):
     print(os.getcwd())
     #todo: add load and update parameters function
     args = load_config(config_path, args)
@@ -111,6 +111,8 @@ def main(config_path, log_dir, gpu, print_log, enable_pbar, seed, info, load_pat
         return_save_path,
         reset_layers,
         reset_sac_frequency,
+        model_utd,
+        agent_utd,
         **args['trainer']
     )
     

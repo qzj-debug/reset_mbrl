@@ -8,7 +8,7 @@ overwrite_args = {
       "learning_rate": 1e-3
     }, 
     "entropy": {
-      "automatic_tuning": False
+      "automatic_tuning": True
     }
   }
 }

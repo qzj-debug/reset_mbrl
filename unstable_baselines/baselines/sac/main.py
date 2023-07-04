@@ -19,26 +19,36 @@ from functools import partialmethod
 ))
 @click.argument("config-path",type=str)
 @click.option("--log-dir", default=os.path.join("logs", "sac"))
-@click.option("--gpu", type=int, default=-1)
 @click.option("--print-log", type=bool, default=True)
 @click.option("--enable-pbar", type=bool, default=True)
-@click.option("--seed", type=int, default=35)
 @click.option("--info", type=str, default="")
 @click.option("--load-path", type=str, default="")
+
+
+@click.option("--gpu", type=int, default=-1)
+@click.option("--seed", type=int, default=35)
+@click.option("--env", type=str, default="HalfCheetah-v2") # HalfCheetah-v2, Hopper-v2, Walker2d-v2
+@click.option("--agent_save_frequency", type=int, default=0)
+@click.option("--agent_save_path", type=str, default="/home/data/qzj/data/unstable_baselines/unstable_baselines/model_based_rl/results/sac/HalfCheetah/agents/")
+@click.option("--return_save_path", type=str, default="/home/data/qzj/data/unstable_baselines/unstable_baselines/model_based_rl/results/sac/HalfCheetah/return/half100.txt") #具体到文件，10000步保存一次
+@click.option("--reset_frequency", type=int, default=0) #reset的频率，默认不reset
+@click.option("--utd", type=int, default=1) 
+
 @click.argument('args', nargs=-1)
-def main(config_path, log_dir, gpu, print_log, enable_pbar, seed, info, load_path, args):
+def main(config_path, log_dir, gpu, print_log, enable_pbar, seed, info, load_path, env, agent_save_frequency, agent_save_path, return_save_path, reset_frequency, utd, args):
     #todo: add load and update parameters function
     args = load_config(config_path, args)
 
     #silence tqdm progress bar output
     if not enable_pbar:
         tqdm.__init__ = partialmethod(tqdm.__init__, disable=True)
-        
+
     #set global seed
     set_global_seed(seed)
 
     #initialize logger
-    env_name = args['env_name']
+    #env_name = args['env_name']
+    env_name = env
     logger = Logger(log_dir, env_name, seed, info_str=info, print_to_terminal=print_log)
 
     #set device and logger
@@ -65,11 +75,17 @@ def main(config_path, log_dir, gpu, print_log, enable_pbar, seed, info, load_pat
     #initialize trainer
     logger.log_str("Initializing Trainer")
     trainer  = SACTrainer(
+        seed,
         agent,
         train_env,
         eval_env,
         buffer,
         load_path=load_path,
+        agent_save_frequency=agent_save_frequency,
+        agent_save_path=agent_save_path,
+        return_save_path=return_save_path,
+        reset_frequency = reset_frequency,
+        utd = utd,
         **args['trainer']
     )
 

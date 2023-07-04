@@ -1,0 +1,3 @@
+half100.txt记录了mbpo的baseline
+reset_agent记录了重置q和policy
+reset记录了重置model

@@ -7,7 +7,7 @@ train的过程在trainer中（调用agent的方法）
 记录实验结果的代码在common/trainer中 40行， poststep()
 agent在agent.py里定义
 
-
+保存agent(包括q 和 policy)的代码在common/trainer.py中，snapshot是保存，load_snapshot是加载
 
 model reset 主要更改代码：
 
@@ -33,10 +33,12 @@ agent reset同样在networks.py里定义
 
 问题：
 如何评价一个model学的是否更好？
-使用一个预训练的sac agent (保留actor, critic, replay_buffer)，看指标，评价模型好坏
+使用一个预训练的sac agent (保留actor, critic, replay_buffer)，看指标，评价模型好坏 ，或者不用保存replay_buffer,到时候直接rollout就行。
 
 仅仅reset agent 怎么样？
 尝试一下reset sac agent的效果 命名为reset_sac_...
 
 
+第一个图：展示高utd下mbpo效果会下降（高utd可以使用model和agent两个utd进行对比）
+第二个图：展示reset对sac有效，对mbpo无效
 

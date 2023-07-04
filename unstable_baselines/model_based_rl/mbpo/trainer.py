@@ -19,6 +19,8 @@ class MBPOTrainer(BaseTrainer):
             return_save_path: str,
             reset_layers,
             reset_sac_frequency: int,
+            model_utd: int, 
+            agent_utd: int,
             agent_batch_size: int,
             model_batch_size: int,
             rollout_batch_size: int,
@@ -50,6 +52,8 @@ class MBPOTrainer(BaseTrainer):
         self.return_save_path = return_save_path
         self.reset_layers = reset_layers
         self.reset_sac_frequency = reset_sac_frequency
+        self.model_utd = model_utd
+        self.agent_utd = agent_utd
         #hyperparameters
         self.agent_batch_size = agent_batch_size
         self.model_batch_size = model_batch_size
@@ -147,7 +151,8 @@ class MBPOTrainer(BaseTrainer):
                 if tot_env_steps % self.train_model_interval == 0 and self.model_env_ratio > 0.0:
                     #train model
                     train_model_start_time = time()
-                    model_log_infos = self.train_model()
+                    for _ in range(self.model_utd): #更新model utd次
+                        model_log_infos = self.train_model()
                     train_model_used_time =  time() - train_model_start_time
 
                     #rollout model
@@ -161,9 +166,14 @@ class MBPOTrainer(BaseTrainer):
 
                 #train agent
                 train_agent_start_time = time()
-                for agent_update_step in range(self.num_agent_updates_per_env_step):#G
-                    agent_log_infos = self.train_agent()
-                    tot_agent_update_steps += 1
+                if self.agent_utd > 0 :
+                    for _ in range(self.agent_utd):
+                        agent_log_infos = self.train_agent()
+                        tot_agent_update_steps += 1
+                else: #使用默认配置
+                    for agent_update_step in range(self.num_agent_updates_per_env_step):#G
+                        agent_log_infos = self.train_agent()
+                        tot_agent_update_steps += 1
                 train_agent_used_time =  time() - train_agent_start_time
 
                 log_infos.update(agent_log_infos)

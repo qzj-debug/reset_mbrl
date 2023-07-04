@@ -33,9 +33,9 @@ default_args = {
     }
   },
   "trainer":{
-    "max_env_steps": 3000000,
+    "max_env_steps": 400000,
     "batch_size": 256,
-    "eval_interval": 10000,
+    "eval_interval": 1000,
     "num_eval_trajectories": 10,
     "snapshot_interval": 200000,
     "start_timestep": 2000,

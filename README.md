@@ -46,7 +46,7 @@ conda env create -f env.yaml
 conda activate rl_base
 pip install -e .
 ```
-
+    
 ### To run an algorithm
 In the directory of the algorithm
 ``` shell

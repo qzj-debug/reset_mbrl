@@ -5,7 +5,7 @@ import os
 import cv2
 from time import time
 from unstable_baselines.common import util
-from unstable_baselines.common import util
+
 class BaseTrainer():
     def __init__(self, agent, train_env, eval_env, 
             max_trajectory_length,
